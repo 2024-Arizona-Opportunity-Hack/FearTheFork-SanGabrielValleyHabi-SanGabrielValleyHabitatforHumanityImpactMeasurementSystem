@@ -53,6 +53,10 @@ income_brackets = [
     'More than $119,850'
 ]
 
+# Function to generate a random 10-digit phone number
+def generate_phone_number():
+    return ''.join([str(random.randint(0, 9)) for _ in range(10)])
+    
 # Function to generate synthetic responses
 def generate_response():
     email = fake.unique.email()
@@ -60,9 +64,9 @@ def generate_response():
     gender = random.choice(genders)
     age = random.randint(18, 80)
     street_address = fake.street_address()
-    unit_apt = random.choice(['', 'Apt ' + str(random.randint(1, 999))])
+    unit_apt = random.choice([''])
     city = random.choice(cities)
-    phone_number = fake.phone_number()
+    phone_number = generate_phone_number()  #fake.phone_number()
     how_hear_choice = random.choice(how_hear)
     only_title = random.choice(yes_no)
     purchase_year = random.randint(1980, 2023)
@@ -75,7 +79,7 @@ def generate_response():
     if main_contact == 'Yes':
         contact_name = fake.name()
         contact_relationship = random.choice(relationships)
-        contact_phone = fake.phone_number()
+        contact_phone = generate_phone_number()  #fake.phone_number()
         contact_email = fake.email()
     else:
         contact_name = ''
