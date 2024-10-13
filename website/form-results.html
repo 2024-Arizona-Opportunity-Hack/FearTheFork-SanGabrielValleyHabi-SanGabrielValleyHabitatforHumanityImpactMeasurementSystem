@@ -98,11 +98,21 @@
 
     <!-- JavaScript for Access Control -->
     <script>
-        // Predefined list of authorized users and their passwords
+        // SHA-256 hashing function
+        async function hashText(text) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const hash = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hash))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        // Predefined list of authorized users and their SHA-256 hashed passwords
         const authorizedUsers = {
-            "admin": "adminpassword",
-            "user1": "user1password",
-            "user2": "user2password"
+            "admin": "25f43b1486ad95a1398e3eeb3d83bc4010015fcc9bedb35b432e00298d5021f7",
+            "user1": "your_hashed_user1_password",
+            "user2": "your_hashed_user2_password"
         };
 
         const loginBtn = document.getElementById('login-btn');
@@ -113,11 +123,14 @@
         const logoutBtn = document.getElementById('logout-btn');
 
         // Handle login
-        loginBtn.addEventListener('click', () => {
+        loginBtn.addEventListener('click', async () => {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            if (authorizedUsers[username] && authorizedUsers[username] === password) {
+            // Hash the entered password
+            const hashedPassword = await hashText(password);
+
+            if (authorizedUsers[username] && authorizedUsers[username] === hashedPassword) {
                 // Login successful
                 errorMessage.textContent = "";
                 userNameDisplay.textContent = username;
