@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Correlation Analyzer</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #upload-section {
+            margin-bottom: 20px;
+        }
+        #charts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .chart {
+            width: 45%;
+            min-width: 300px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Data Correlation Analyzer</h1>
+
+    <div id="upload-section">
+        <input type="file" id="csvFile" accept=".csv" />
+        <button onclick="processData()">Analyze Data</button>
+    </div>
+
+    <div id="charts">
+        <div id="heatmap" class="chart"></div>
+        <div id="barChart" class="chart"></div>
+        <div id="scatterPlot" class="chart"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
