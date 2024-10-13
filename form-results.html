@@ -17,17 +17,22 @@
         .navbar-brand, .nav-link {
             color: white !important;
         }
-        .navbar-brand:hover, .nav-link:hover {
-            color: #8cc63f !important; /* Matching green color */
-        }
         h1 {
-            color: #003366; /* Dark blue */
+            color: #003366;
         }
         .container {
             margin-top: 50px;
         }
-        .locked {
+        .hidden {
             display: none;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+        .error-message {
+            color: red;
         }
     </style>
 </head>
@@ -42,7 +47,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">Forms</a>
+                        <a class="nav-link" href="mainPage.html">Forms</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="data-analysis.html">Data Analysis</a>
@@ -55,34 +60,82 @@
     <!-- Admin Access Section -->
     <div class="container">
         <h1>Admin Access - Data Analysis</h1>
-        <p>Please enter the admin password to view the data:</p>
-
-        <!-- Password Input -->
-        <div class="mb-3">
-            <input type="password" id="adminPassword" class="form-control" placeholder="Enter Admin Password">
+        <p>Please enter your username and password to view the data:</p>
+        
+        <!-- Sign-in Form -->
+        <div id="login-screen">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter your username">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter your password">
+            </div>
+            <button id="login-btn" class="btn btn-primary">Login</button>
+            <p id="error-message" class="error-message"></p>
         </div>
-        <button class="btn btn-primary" onclick="checkPassword()">Submit</button>
 
-        <!-- Locked Content: Google Sheets -->
-        <div class="locked mt-5" id="lockedContent">
-            <h2>Google Sheets Data</h2>
-            <iframe src="https://docs.google.com/spreadsheets/d/1QWrK1tBz0xSJVJuGL6szlhQvy_hRFOjN-_oFEOIBGPg/edit?usp=sharing" 
-                    width="100%" height="600px"></iframe>
-        </div>
+        <!-- Profile Screen (Visible after successful login) -->
+        <div class="hidden" id="profile-screen">
+            <p>Welcome <span id="user-name"></span>!</p>
+            <button id="logout-btn" class="btn btn-danger">Logout</button>
+
+            <!-- Embedded Google Sheets -->
+            <h2>Emailer Data</h2>
+            <iframe src="https://docs.google.com/spreadsheets/d/11g3Fa5d2vURkVfL_qiXkA6ugv-70yz6SkQGuaXKlpJA/edit?usp=sharing?widget=true&amp;headers=false"></iframe>
+
+            <h2>HPP Exit Survey Data</h2>
+            <iframe src="https://docs.google.com/spreadsheets/d/1QWrK1tBz0xSJVJuGL6szlhQvy_hRFOjN-_oFEOIBGPg/edit?usp=sharing?widget=true&amp;headers=false"></iframe>
+
+            <h2>Survey Question 1 Data</h2>
+            <iframe src="https://docs.google.com/spreadsheets/d/1SRFD9YuFxniqBi2Zvusn5p5JEuWJOmB_9Eak6oocfZ8/edit?usp=sharing?widget=true&amp;headers=false"></iframe>
+
+            <h2>Survey Question 2 Data</h2>
+            <iframe src="https://docs.google.com/spreadsheets/d/1KMC6N25oHO0on0HjiC2XYAXtUAWF8Qjvt38-_PFOH1Y/edit?usp=sharing?widget=true&amp;headers=false"></iframe>
+        </div> 
     </div>
 
     <!-- JavaScript for Access Control -->
     <script>
-        function checkPassword() {
-            const enteredPassword = document.getElementById('adminPassword').value;
-            const correctPassword = 'sgvhabitat'; // Set the actual password you want
+        // Predefined list of authorized users and their passwords
+        const authorizedUsers = {
+            "admin": "adminpassword",
+            "user1": "user1password",
+            "user2": "user2password"
+        };
 
-            if (enteredPassword === correctPassword) {
-                document.getElementById('lockedContent').style.display = 'block';
+        const loginBtn = document.getElementById('login-btn');
+        const errorMessage = document.getElementById('error-message');
+        const profileScreen = document.getElementById('profile-screen');
+        const loginScreen = document.getElementById('login-screen');
+        const userNameDisplay = document.getElementById('user-name');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        // Handle login
+        loginBtn.addEventListener('click', () => {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (authorizedUsers[username] && authorizedUsers[username] === password) {
+                // Login successful
+                errorMessage.textContent = "";
+                userNameDisplay.textContent = username;
+                loginScreen.classList.add('hidden');
+                profileScreen.classList.remove('hidden');
             } else {
-                alert('Incorrect password. Access denied.');
+                // Login failed
+                errorMessage.textContent = "Invalid username or password. Please try again.";
             }
-        }
+        });
+
+        // Handle logout
+        logoutBtn.addEventListener('click', () => {
+            loginScreen.classList.remove('hidden');
+            profileScreen.classList.add('hidden');
+            document.getElementById('username').value = "";
+            document.getElementById('password').value = "";
+        });
     </script>
 
     <!-- Bootstrap JS -->
